@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            window.onload = function () {
+                var dataLength = 0;
+                var data = [];
+                var updateInterval = 500;
+                updateChart();
+                function updateChart() {
+                    $.getJSON("data.php", function (result) {
+                        if (dataLength !== result.length) {
+                            for (var i = dataLength; i < result.length; i++) {
+                                data.push({
+                                    x: parseInt(result[i].valorx),
+                                    y: parseInt(result[i].valory)
+                                });
+                            }
+                            dataLength = result.length;
+                            chart.render();
+                        }
+                    });
+                }
+                var chart = new CanvasJS.Chart("chart", {
+                    title: {
+                        text: "Valores X vs. Valores Y"
+                    },
+                    axisX: {
+                        title: "Valores X",
+                    },
+                    axisY: {
+                        title: "Valores Y",
+                    },
+                    data: [{type: "line", dataPoints: data}],
+                });
+                setInterval(function () {
+                    updateChart()
+                }, updateInterval);
+            }
+        </script>
+        <script type="text/javascript" src="assets/script/canvasjs.min.js"></script>
+        <script type="text/javascript" src="assets/script/jquery-2.2.3.min.js"></script>
+    </head>
+    <body>
+        <div id="chart">
+        </div>
+    </body>
+</html>
